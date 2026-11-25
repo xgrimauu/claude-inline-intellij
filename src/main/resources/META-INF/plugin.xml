@@ -14,4 +14,11 @@
         <notificationGroup id="Claude Inline" displayType="BALLOON"/>
     </extensions>
 
+    <actions>
+        <action id="dev.claudeinline.InlinePrompt" class="dev.claudeinline.InlinePromptAction"
+                text="Claude Inline Edit" description="Ask Claude Code to edit the current line or selection">
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control A"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control A"/>
+        </action>
+    </actions>
 </idea-plugin>
