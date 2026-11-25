@@ -1,0 +1,7 @@
+%openFile src/Person.java
+%goto 5 9
+%sleep 7000
+%takeScreenshot 1-popup
+%sleep 60000
+%takeScreenshot 2-result
+%exitApp

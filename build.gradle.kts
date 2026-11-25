@@ -37,3 +37,27 @@ tasks.test {
     useJUnitPlatform()
     inputs.property("e2e", providers.environmentVariable("CLAUDE_INLINE_E2E").orElse(""))
 }
+
+intellijPlatformTesting.runIde.register("runIdeProof") {
+    task {
+        val proof = file("proof")
+        val sampleProject = layout.buildDirectory.dir("proof/project")
+        val startupScripts = sandboxConfigDirectory.dir("extensions/com.intellij/startup")
+        jvmArgumentProviders += CommandLineArgumentProvider {
+            listOf(
+                "-Dtestscript.filename=${proof.resolve("script.txt")}",
+                "-Didea.trust.all.projects=true",
+                "-Djb.consents.confirmation.enabled=false",
+                "-Djb.privacy.policy.text=<!--999.999-->",
+                "-Dide.newUsersOnboarding=false",
+                "-Dintellij.startup.wizard=false",
+            )
+        }
+        argumentProviders += CommandLineArgumentProvider { listOf(sampleProject.get().asFile.absolutePath) }
+        doFirst {
+            sampleProject.get().asFile.deleteRecursively()
+            proof.resolve("project").copyRecursively(sampleProject.get().asFile)
+            proof.resolve("drive.groovy").copyTo(startupScripts.get().file("drive.groovy").asFile, overwrite = true)
+        }
+    }
+}

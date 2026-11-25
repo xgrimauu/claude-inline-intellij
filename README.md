@@ -28,4 +28,7 @@ No restart is necessary. The plugin is dynamic.
 ./gradlew verifyPlugin   # Plugin Verifier against the target IDE
 ./gradlew runIde         # sandbox IDE with the plugin
 CLAUDE_INLINE_E2E=1 ./gradlew test --tests '*real_claude_cli*'   # calls the real CLI, spends tokens
+./gradlew runIdeProof    # sandbox IDE end to end, calls the real CLI, spends tokens
 ```
+
+`runIdeProof` opens `proof/project` (a copy in `build/proof/project`) in a sandbox IDE. The bundled Performance Testing plugin runs `proof/script.txt`: it opens `Person.java`, goes to line 5 and takes screenshots. The IDE startup script `proof/drive.groovy` posts a real Ctrl+A key event, types the instruction into the prompt and presses Enter. Screenshots go to `.intellijPlatform/sandbox/claude-inline/IU-2026.2.5/log_runIdeProof/screenshots/`.
