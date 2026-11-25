@@ -68,17 +68,14 @@ Thread.start("claude-inline-proof") {
         def instruction = "finish the setters and getters"
         boolean fieldFocused = onEdt { field.focusOwner }
         log.info("PROOF prompt field focused: $fieldFocused")
-        if (fieldFocused) {
-            for (c in instruction.toCharArray()) {
-                IdeEventQueue.instance.postEvent(new KeyEvent(field, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, c))
-                sleep 30
-            }
-        } else {
-            onEdt { field.text = instruction }
+        if (!fieldFocused) return
+        for (c in instruction.toCharArray()) {
+            IdeEventQueue.instance.postEvent(new KeyEvent(field, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, c))
+            sleep 30
         }
         sleep 6000
         log.info("PROOF prompt text before Enter: ${onEdt { field.text }}")
-        if (fieldFocused) press(field, KeyEvent.VK_ENTER, 0) else onEdt { field.postActionEvent() }
+        press(field, KeyEvent.VK_ENTER, 0)
 
         def before = onEdt { editor.document.text }
         for (i in 0..<600) {

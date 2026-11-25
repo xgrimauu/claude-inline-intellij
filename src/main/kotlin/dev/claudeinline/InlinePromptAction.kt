@@ -39,7 +39,6 @@ class InlinePromptAction : AnAction(), ActionPromoter {
         }
     }
 
-    // Ctrl+A is also EditorLineStart in the macOS keymaps; the dispatcher runs the first enabled action.
     override fun promote(actions: List<AnAction>, context: DataContext): List<AnAction> = listOf(this)
 
     private fun selectedLines(editor: Editor): IntRange {

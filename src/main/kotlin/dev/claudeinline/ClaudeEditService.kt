@@ -47,7 +47,7 @@ class ClaudeEditService(private val project: Project, private val scope: Corouti
             }
             val lines = output.await().lines().filter { it.isNotBlank() }
             if (exitCode == 0) {
-                LocalFileSystem.getInstance().refreshAndFindFileByNioFile(request.file)
+                LocalFileSystem.getInstance().findFileByNioFile(request.file)
                     ?.let { VfsUtil.markDirtyAndRefresh(false, false, false, it) }
                 notify(lines.lastOrNull() ?: "Done", NotificationType.INFORMATION)
             } else {
