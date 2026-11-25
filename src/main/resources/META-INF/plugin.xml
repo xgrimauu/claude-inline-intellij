@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>dev.claudeinline</id>
     <name>Claude Inline</name>
-    <vendor>xavi</vendor>
+    <vendor url="https://github.com/xgrimauu/claude-inline-intellij">Xavi Grimau</vendor>
     <description><![CDATA[
         <p>Press Ctrl+A in an editor, type an instruction and press Enter.
         A headless Claude Code process edits the current line or selection in place.</p>

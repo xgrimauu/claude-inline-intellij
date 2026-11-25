@@ -1,34 +1,56 @@
 # Claude Inline
 
-IntelliJ plugin. Press Ctrl+A in an editor, type an instruction, press Enter. A headless Claude Code process edits the current line (or the selected lines) in place, and the editor shows the change.
+Inline [Claude Code](https://claude.com/claude-code) prompt for IntelliJ IDEA. Press Ctrl+A in the editor, type an instruction, press Enter. Claude Code edits the current line, or the selected lines, in place.
 
-- The combo box selects the model: Opus, Fable, Sonnet or Haiku. The plugin remembers the last one.
-- Opus runs with fast mode on. The other models run at standard speed.
-- Claude can only use the Read, Edit, Glob and Grep tools. MCP servers are off. Runs do not show in `/resume`.
-- Cancel the background task to kill the Claude process.
+Not affiliated with Anthropic or JetBrains.
 
 ## Requirements
 
-- IntelliJ IDEA 2026.2 (build 262) or later.
-- The `claude` CLI on your login shell PATH. The plugin resolves `claude` from the login shell PATH, so an IDE started from the Dock finds `~/.local/bin/claude` when `~/.zprofile` or `~/.zshrc` adds `~/.local/bin`.
-- A macOS keymap ("macOS" or a copy of it). Ctrl+A is bound only in "Mac OS X 10.5+" and "Mac OS X". In an editor it runs before "Move Caret to Line Start". Other keymaps: assign a shortcut to "Claude Inline Edit" in Settings, Keymap.
+- IntelliJ IDEA 2026.2 or later, with a macOS keymap.
+- The Claude Code CLI (`claude`), logged in and on your login shell PATH.
 
 ## Install
 
-1. `./gradlew buildPlugin`
-2. Settings, Plugins, gear icon, Install Plugin from Disk.
-3. Select `build/distributions/claude-inline-0.1.0.zip`.
+1. Download `claude-inline-<version>.zip` from [Releases](https://github.com/xgrimauu/claude-inline-intellij/releases).
+2. In IntelliJ, open Settings > Plugins > gear icon > Install Plugin from Disk.
+3. Select the zip. You do not need to restart the IDE.
 
-No restart is necessary. The plugin is dynamic.
+## How to use
 
-## Develop
+1. Put the caret on a line, or select lines.
+2. Press Ctrl+A. A prompt opens at the caret.
+3. Select the model: Opus, Fable, Sonnet or Haiku. The plugin remembers the last one.
+4. Type the instruction, for example `finish the setters and getters`.
+5. Press Enter. To close the prompt without a run, press Esc.
+
+Claude runs in the background. When it finishes, the editor reloads the file and a notification shows what changed. To stop Claude, cancel the task in the status bar.
+
+## What it runs
 
 ```
+claude -p "<instruction, file path and line>" --model opus --effort medium \
+  --settings '{"fastMode":true}' --permission-mode acceptEdits \
+  --tools Read,Edit,Glob,Grep --strict-mcp-config --no-session-persistence
+```
+
+- Claude can only read and edit files. It has no shell and no MCP servers.
+- Fast mode is on for Opus only. If your organization has fast mode off, Opus runs at standard speed.
+- Runs do not show in `claude --resume`.
+
+## Shortcut
+
+Ctrl+A is bound only in the macOS keymaps. In the editor it replaces "Move Caret to Line Start" (Cmd+Left still does that). On other keymaps, assign a shortcut to "Claude Inline Edit" in Settings > Keymap.
+
+## Build from source
+
+```
+./gradlew buildPlugin    # zip in build/distributions
 ./gradlew build          # compile and tests
-./gradlew verifyPlugin   # Plugin Verifier against the target IDE
-./gradlew runIde         # sandbox IDE with the plugin
-CLAUDE_INLINE_E2E=1 ./gradlew test --tests '*real_claude_cli*'   # calls the real CLI, spends tokens
-./gradlew runIdeProof    # sandbox IDE end to end, calls the real CLI, spends tokens
+./gradlew verifyPlugin   # JetBrains Plugin Verifier
+CLAUDE_INLINE_E2E=1 ./gradlew test   # adds a test against the real CLI (spends tokens)
+./gradlew runIdeProof    # sandbox IDE run: Ctrl+A, type, Enter, screenshots (spends tokens)
 ```
 
-`runIdeProof` opens `proof/project` (a copy in `build/proof/project`) in a sandbox IDE. The bundled Performance Testing plugin runs `proof/script.txt`: it opens `Person.java`, goes to line 5 and takes screenshots. The IDE startup script `proof/drive.groovy` posts a real Ctrl+A key event, types the instruction into the prompt and presses Enter. Screenshots go to `.intellijPlatform/sandbox/claude-inline/IU-2026.2.5/log_runIdeProof/screenshots/`.
+## License
+
+[MIT](LICENSE)
