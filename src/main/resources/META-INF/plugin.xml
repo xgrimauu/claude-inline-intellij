@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>dev.claudeinline</id>
+    <name>Claude Inline</name>
+    <vendor>xavi</vendor>
+    <description><![CDATA[
+        <p>Press Ctrl+A in an editor, type an instruction and press Enter.
+        A headless Claude Code process edits the current line or selection in place.</p>
+        <p>Needs the <code>claude</code> CLI on the login shell PATH.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="Claude Inline" displayType="BALLOON"/>
+    </extensions>
+
+</idea-plugin>
